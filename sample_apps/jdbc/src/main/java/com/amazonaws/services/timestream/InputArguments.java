@@ -9,4 +9,7 @@ public class InputArguments {
 
     @Option(name = "--host", aliases = "-h", usage = "DevOps table host to query", required = true)
     String host;
+
+    @Option(name = "--endpoint", aliases = "-e", usage = "Endpoint URL", required = false)
+    boolean endpoint;
 }

@@ -1,5 +1,8 @@
 package com.amazonaws.services.timestream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.sql.PooledConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,6 +13,7 @@ import java.util.ArrayList;
 import java.util.StringJoiner;
 
 public class QueryExample {
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueryExample.class);
 
     public static final String TABLE_NAME = "DevOps";
 
@@ -269,8 +273,20 @@ public class QueryExample {
     /**
      * Runs all sample queries with a non-pooled Timestream connection.
      */
-    public void runAllQueriesWithTimestreamConnection() {
+    public void runAllQueriesWithSimpleConnection() {
         try (Connection connection = JdbcConnectionExample.createConnectionWithLocalCredentials()) {
+            runAllQueries(connection);
+        } catch (SQLException e) {
+            // Some queries might fail with 500 if the result of a sequence function has more than 10000 entries
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Runs all sample queries with a Timestream connection using endpoint.
+     */
+    public void runAllQueriesWithEndpointConnection() {
+        try (Connection connection = JdbcConnectionExample.createConnectionWithSpecificEndpoint()) {
             runAllQueries(connection);
         } catch (SQLException e) {
             // Some queries might fail with 500 if the result of a sequence function has more than 10000 entries
@@ -291,8 +307,8 @@ public class QueryExample {
     public void runAllQueries(final Connection connection) throws SQLException {
         for (int i = 0; i < queries.size(); i++) {
             try (Statement statement = connection.createStatement()) {
-                System.out.println("\n=================================================");
-                System.out.println("Running query " + (i + 1) + ": " + queries.get(i));
+                LOGGER.info("\n=================================================");
+                LOGGER.info("Running query " + (i + 1) + ": " + queries.get(i));
                 try (ResultSet result = statement.executeQuery(queries.get(i))) {
                     final StringJoiner dataBuilder = new StringJoiner("\n");
                     final StringJoiner columnMetaDataBuilder = new StringJoiner(", ", "[", "]");
@@ -309,8 +325,8 @@ public class QueryExample {
                         columnMetaDataBuilder.add(columnBuilder.toString());
                     }
 
-                    System.out.println("Metadata: ");
-                    System.out.println(columnMetaDataBuilder.toString());
+                    LOGGER.info("Metadata: ");
+                    LOGGER.info(columnMetaDataBuilder.toString());
 
                     while (result.next()) {
                         final StringJoiner resultSetBuilder = new StringJoiner(", ", "{", "}");
@@ -321,9 +337,9 @@ public class QueryExample {
                         dataBuilder.add(resultSetBuilder.toString());
                     }
 
-                    System.out.println("Data: ");
-                    System.out.println(dataBuilder.toString());
-                    System.out.println("=================================================\n");
+                    LOGGER.info("Data: ");
+                    LOGGER.info(dataBuilder.toString());
+                    LOGGER.info("=================================================\n");
                 }
             }
         }
