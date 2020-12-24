@@ -20,7 +20,7 @@ import (
 /**
   This code sample is to run the CRUD APIs and WriteRecords API in a logical order.
 */
-func main() {
+func main3() {
 
 	/**
 	* Recommended Timestream write client SDK configuration:
@@ -340,16 +340,12 @@ func main() {
 		CommonAttributes: &timestreamwrite.Record{
 			Dimensions: []*timestreamwrite.Dimension{
 				{
-					Name:  aws.String("region"),
-					Value: aws.String("us-east-1"),
+					Name:  aws.String("resource_owner_ID"),
+					Value: aws.String("05885e3a-a94e-4cd4-8548-db92dddf9709"),
 				},
 				{
-					Name:  aws.String("az"),
-					Value: aws.String("az1"),
-				},
-				{
-					Name:  aws.String("hostname"),
-					Value: aws.String("host1"),
+					Name:  aws.String("robot_ID"),
+					Value: aws.String("ab85062f5bed5561d23fb387b28ad1ae"),
 				},
 			},
 			MeasureValueType: aws.String("DOUBLE"),
@@ -359,12 +355,12 @@ func main() {
 		},
 		Records: []*timestreamwrite.Record{
 			{
-				MeasureName:  aws.String("cpu_utilization"),
-				MeasureValue: aws.String("13.5"),
+				MeasureName:  aws.String("ang1j"),
+				MeasureValue: aws.String("0.00043945"),
 			},
 			{
-				MeasureName:  aws.String("memory_utilization"),
-				MeasureValue: aws.String("40"),
+				MeasureName:  aws.String("ang2j"),
+				MeasureValue: aws.String("0.015747"),
 			},
 		},
 	}
@@ -376,7 +372,7 @@ func main() {
 		fmt.Println("Error:")
 		fmt.Println(err)
 	} else {
-		fmt.Println("Frist-time write records is successful")
+		fmt.Println("First-time write records is successful")
 	}
 
 	fmt.Println("Retry same writeRecordsRequest with same records and versions. Because writeRecords API is idempotent, this will success. hit enter to continue")

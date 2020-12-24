@@ -4,16 +4,17 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/timestreamquery"
-	"github.com/aws/aws-sdk-go/service/timestreamwrite"
 	"io"
 	"net"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/timestreamquery"
+	"github.com/aws/aws-sdk-go/service/timestreamwrite"
 
 	"golang.org/x/net/http2"
 )
@@ -23,7 +24,7 @@ import (
   The record schema is fixed, the format is [dimension_name_1, dimension_value_1, dimension_name_2, dimension_value_2, dimension_name_2, dimension_value_2, measure_name, measure_value, measure_data_type, time, time_unit].
   The code will replace the time in the record with a time in the range [current_epoch_in_seconds - number_of_records * 10, current_epoch_in_seconds].
 */
-func main() {
+func main2() {
 
 	/**
 	* Recommended Timestream write client SDK configuration:
@@ -60,7 +61,7 @@ func main() {
 
 	databaseName := flag.String("database_name", "devops", "database name string")
 	tableName := flag.String("table_name", "host_metrics", "table name string")
-	testFileName := flag.String("test_file", "../data/sample.csv", "CSV file containing the data to ingest")
+	testFileName := flag.String("test_file", "./sample.csv", "CSV file containing the data to ingest")
 
 	flag.Parse()
 
@@ -149,15 +150,15 @@ func main() {
 		}
 		records = append(records, &timestreamwrite.Record{
 			Dimensions: []*timestreamwrite.Dimension{
-				&timestreamwrite.Dimension{
+				{
 					Name:  aws.String(record[0]),
 					Value: aws.String(record[1]),
 				},
-				&timestreamwrite.Dimension{
+				{
 					Name:  aws.String(record[2]),
 					Value: aws.String(record[3]),
 				},
-				&timestreamwrite.Dimension{
+				{
 					Name:  aws.String(record[4]),
 					Value: aws.String(record[5]),
 				},

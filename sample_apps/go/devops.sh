@@ -16,7 +16,7 @@ go run query-common.go query-sample.go -query "SELECT region, az, hostname, BIN(
 FROM $1.$2
 WHERE measure_name = 'cpu_utilization'
    AND hostname = '$3'
-    AND time > ago(2h)
+    AND time > ago(1d)
 GROUP BY region, hostname, az, BIN(time, 15s)
 ORDER BY binned_timestamp ASC"
  

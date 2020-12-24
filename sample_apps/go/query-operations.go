@@ -10,7 +10,7 @@ import (
 	"os"
 )
 
-func main() {
+func main1() {
 	// setup the query client
 	sess, err := session.NewSession(&aws.Config{Region: aws.String("us-east-1")})
 	querySvc := timestreamquery.New(sess)
