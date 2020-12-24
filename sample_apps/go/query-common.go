@@ -81,6 +81,10 @@ func processRowType(data []*timestreamquery.Datum, metadata []*timestreamquery.C
 	value := ""
 	for j := 0; j < len(data); j++ {
 		if metadata[j].Type.ScalarType != nil {
+			// skip null columns
+			if data[j].NullValue != nil {
+				continue
+			}
 			// process simple data types
 			value += processScalarType(data[j])
 		} else if metadata[j].Type.TimeSeriesMeasureValueColumnInfo != nil {
